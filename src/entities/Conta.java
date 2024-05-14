@@ -1,5 +1,9 @@
 package entities;
 
+import lombok.Data;
+import org.w3c.dom.ls.LSOutput;
+
+@Data
 public abstract class Conta implements IConta {
 
     private static final int AGENCIA_PADRAO = 1;
@@ -8,7 +12,7 @@ public abstract class Conta implements IConta {
     protected int agencia;
     protected int numero;
     protected double saldo;
-    private Cliente cliente;
+    protected Cliente cliente;
 
     public Conta(Cliente cliente) {
         this.agencia = Conta.AGENCIA_PADRAO;
@@ -18,18 +22,34 @@ public abstract class Conta implements IConta {
 
     @Override
     public void sacar(double valor) {
-        this.saldo -= valor;
+        if(this.saldo >= valor) {
+            this.saldo -= valor;
+        } else {
+            System.out.println("Não há saldo suficiente");
+        }
     }
 
     @Override
     public void depositar(double valor) {
-        this.saldo += valor;
+        if(valor > 0) {
+            this.saldo += valor;
+        }
     }
 
     @Override
     public void transferir(Conta destino, double valor) {
-        this.sacar(valor);
-        destino.depositar(valor);
+        System.out.println("Iniciando transferência...");
+        if(valor > 0){
+            if(this.saldo >= valor) {
+                this.sacar(valor);
+                destino.depositar(valor);
+                System.out.println("Transferência realizada com sucesso!");
+            } else {
+                System.out.println("Erro: Saldo insuficiente na conta de origem.");
+            }
+        } else {
+            System.out.println("Erro: Valor deve ser maior que 0.");
+        }
     }
 
     protected void imprimirInfosComuns() {
@@ -38,17 +58,4 @@ public abstract class Conta implements IConta {
         System.out.println(String.format("Número: %d", this.numero));
         System.out.println(String.format("Saldo: %.2f", this.saldo));
     }
-
-    public int getAgencia() {
-        return agencia;
-    }
-
-    public int getNumero() {
-        return numero;
-    }
-
-    public double getSaldo() {
-        return saldo;
-    }
-
 }

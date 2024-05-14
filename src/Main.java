@@ -1,7 +1,4 @@
-import entities.Cliente;
-import entities.Conta;
-import entities.ContaCorrente;
-import entities.ContaPoupanca;
+import entities.*;
 
 public class Main {
 
@@ -10,12 +7,15 @@ public class Main {
 
         Conta cc = new ContaCorrente(cliente);
         cc.depositar(100);
+        cc.imprimirExtrato();
 
         Conta poupanca = new ContaPoupanca(cliente);
-        cc.transferir(poupanca, 100);
-
-        cc.imprimirExtrato();
+        cc.transferir(poupanca, 200);
         poupanca.imprimirExtrato();
 
+        Banco banco = new Banco();
+        banco.getContas().add(cc);
+        banco.getContas().add(poupanca);
+        banco.listarClientes();
     }
 }
